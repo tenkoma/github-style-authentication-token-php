@@ -1,0 +1,17 @@
+{
+    "name": "tenkoma/github-styoel-authentication-token",
+    "type": "library",
+    "license": "MIT License",
+    "autoload": {
+        "psr-4": {
+            "Tenkoma\\GithubStyoelAuthenticationToken\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Koji Tanaka",
+            "email": "tenkoma@gmail.com"
+        }
+    ],
+    "require": {}
+}
