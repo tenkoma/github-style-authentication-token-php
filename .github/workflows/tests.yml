@@ -1,0 +1,23 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  build:
+    strategy:
+      matrix:
+        php-versions: ["8.0", "8.1"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+      - name: composer install
+        run: composer install --no-suggest --no-interaction
+      - name: lint
+        run: composer lint
+      - name: static analyse
+        run: composer analyse
+      - name: run tests
+        run: composer test
