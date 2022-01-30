@@ -20,5 +20,11 @@
         "phpunit/phpunit": "^9.5",
         "phpstan/phpstan": "^1.4",
         "squizlabs/php_codesniffer": "^3.6"
+    },
+    "scripts": {
+        "test": "phpunit --colors=always",
+        "analyse": "phpstan analyse -c phpstan.neon",
+        "lint": "phpcs -p --standard=./ruleset.xml --encoding=utf-8 .",
+        "lintfix": "phpcbf -p --standard=./ruleset.xml --encoding=utf-8 ."
     }
 }
