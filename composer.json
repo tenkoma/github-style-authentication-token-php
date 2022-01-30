@@ -4,7 +4,7 @@
     "license": "MIT License",
     "autoload": {
         "psr-4": {
-            "Tenkoma\\GithubStyoelAuthenticationToken\\": "src/"
+            "Tenkoma\\GithubStyleAuthenticationToken\\": "src/"
         }
     },
     "authors": [
