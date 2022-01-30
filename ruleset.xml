@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Custom Standard">
+  <rule ref="PSR12" />
+  <rule ref="Generic.PHP.RequireStrictTypes" />
+  <file>./src</file>
+  <file>./tests</file>
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+  <arg name="extensions" value="php" />
+</ruleset>
