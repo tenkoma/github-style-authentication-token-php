@@ -5,26 +5,26 @@ declare(strict_types=1);
 namespace Tenkoma\GithubStyleAuthenticationToken\Test\TestCase;
 
 use InvalidArgumentException;
-use Tenkoma\GithubStyleAuthenticationToken\Test\Sample\SampleToken;
+use Tenkoma\GithubStyleAuthenticationToken\Base62Token;
 use Tenkoma\GithubStyleAuthenticationToken\Test\TestCase;
 
-class TokenTest extends TestCase
+class Base62TokenTest extends TestCase
 {
     public function testInitialize(): void
     {
-        $sut = new SampleToken('sample_', 'C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp', '0EhQTW');
+        $sut = new Base62Token('sample_', 'C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp', '0EhQTW');
         $this->assertSame('sample_C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp0EhQTW', $sut->toString());
     }
 
     public function testInitializeInvalidToken(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new SampleToken('invalid_', 'C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp', '0EhQTW');
+        new Base62Token('sample_', 'C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp', 'invali');
     }
 
     public function testGenerate(): void
     {
-        $sut = SampleToken::generate();
+        $sut = Base62Token::generate('sample_', 30);
         $this->assertMatchesRegularExpression('/\Asample_[[:alnum:]]+\z/', $sut->toString());
     }
 
@@ -33,7 +33,7 @@ class TokenTest extends TestCase
      */
     public function testVerify(string $token, bool $expected): void
     {
-        $this->assertSame($expected, SampleToken::verify($token));
+        $this->assertSame($expected, Base62Token::verify($token));
     }
 
     /**
@@ -46,12 +46,16 @@ class TokenTest extends TestCase
                 'sample_C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp0EhQTW',
                 true,
             ],
-            'invalid prefix' => [
-                'invalid_C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp0EhQTW',
-                false,
+            'valid prefix' => [
+                'sample_2_C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp0EhQTW',
+                true,
             ],
             'invalid checksum' => [
                 'sample_C5e0bWjTFDtOWCfSPjjKPOUWhQpBGpEEEEEE',
+                false,
+            ],
+            'invalid prefix' => [
+                'sample-C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp0EhQTW',
                 false,
             ],
         ];
@@ -59,7 +63,19 @@ class TokenTest extends TestCase
 
     public function testCreateFromString(): void
     {
-        $sut = SampleToken::createFromString('sample_C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp0EhQTW');
+        $sut = Base62Token::createFromString('sample_C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp0EhQTW');
         $this->assertSame('sample_C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp0EhQTW', $sut->toString());
+    }
+
+    public function testGetPrefix(): void
+    {
+        $sut = Base62Token::createFromString('sample_C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp0EhQTW');
+        $this->assertSame('sample_', $sut->getPrefix());
+    }
+
+    public function testGetRandom(): void
+    {
+        $sut = Base62Token::createFromString('sample_C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp0EhQTW');
+        $this->assertSame('C5e0bWjTFDtOWCfSPjjKPOUWhQpBGp', $sut->getRandom());
     }
 }
